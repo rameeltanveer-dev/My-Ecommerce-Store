@@ -1,0 +1,136 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Booking Confirmation — Premium Store</title>
+
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    .confirm-wrap { max-width:900px; margin:40px auto; padding:20px; }
+    .confirm-card { background: linear-gradient(180deg,rgba(255,255,255,0.03),transparent); padding:20px; border-radius:12px; }
+    .booking-meta { display:flex; gap:20px; flex-wrap:wrap; margin-bottom:16px; }
+    .booking-meta div{ min-width:200px; }
+    .items-table { width:100%; border-collapse:collapse; margin-top:12px; }
+    .items-table th, .items-table td { padding:10px; border-bottom:1px solid rgba(255,255,255,0.05); text-align:left; }
+    .print-btn { margin-top:14px; }
+    .small-muted{ color:var(--muted); }
+  </style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="container header-row">
+      <div class="left">
+        <button onclick="location.href='index.html'" class="icon-btn"><i class="fa-solid fa-arrow-left"></i></button>
+        <div class="brand">PREMIUM<span class="accent">.</span></div>
+      </div>
+      <div class="actions">
+        <button class="btn ghost" onclick="location.href='index.html'">Continue Shopping</button>
+      </div>
+    </div>
+  </header>
+
+  <main class="confirm-wrap">
+    <div class="confirm-card" id="confirmCard">
+      <h2>Booking Confirmation</h2>
+      <p class="small-muted">Thank you — your booking has been received.</p>
+
+      <div id="bookingArea">
+        <!-- Filled by JS -->
+      </div>
+
+      <div style="display:flex;gap:10px;flex-wrap:wrap;margin-top:12px">
+        <button class="btn primary print-btn" id="printBtn"><i class="fa-solid fa-print"></i> Print</button>
+        <button class="btn ghost" onclick="location.href='index.html'">Back to Store</button>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer">
+    <div>© <span id="year"></span> RAMEEL TANVEER. All Rights Reserved.</div>
+  </footer>
+
+  <script>
+    (function(){
+      // helpers
+      const $ = s => document.querySelector(s);
+      const params = new URLSearchParams(location.search);
+      const id = params.get('id');
+      const BOOKING_KEY = 'premium_bookings';
+      const year = document.getElementById('year');
+      if(year) year.textContent = new Date().getFullYear();
+
+      if(!id){
+        document.getElementById('bookingArea').innerHTML = '<p class="small-muted">Booking ID missing. <a href="index.html">Return to store</a>.</p>';
+        throw new Error('Booking ID missing');
+      }
+
+      function loadBookings(){
+        try { return JSON.parse(localStorage.getItem(BOOKING_KEY) || '[]'); }
+        catch(e){ return []; }
+      }
+
+      const bookings = loadBookings();
+      const booking = bookings.find(b => b.id === id);
+
+      if(!booking){
+        document.getElementById('bookingArea').innerHTML = '<p class="small-muted">Booking not found. It may have been cleared from storage.</p>';
+      } else {
+        const created = new Date(booking.createdAt);
+        document.getElementById('bookingArea').innerHTML = `
+          <div class="booking-meta">
+            <div>
+              <div class="small-muted">Booking ID</div>
+              <div><strong>${booking.id}</strong></div>
+            </div>
+            <div>
+              <div class="small-muted">Placed on</div>
+              <div>${created.toLocaleString()}</div>
+            </div>
+            <div>
+              <div class="small-muted">Customer</div>
+              <div>${booking.customer.name}<br><span class="small-muted">${booking.customer.email}</span></div>
+            </div>
+            <div>
+              <div class="small-muted">Phone</div>
+              <div>${booking.customer.phone || '-'}</div>
+            </div>
+            <div>
+              <div class="small-muted">Preferred Date</div>
+              <div>${booking.customer.preferredDate || 'Not specified'}</div>
+            </div>
+          </div>
+
+          <h3>Items</h3>
+          <table class="items-table">
+            <thead><tr><th>Product</th><th>Qty</th><th>Price</th><th>Subtotal</th></tr></thead>
+            <tbody>
+              ${booking.items.map(it => `<tr><td>${it.name}</td><td>${it.qty}</td><td>$${it.price.toFixed(2)}</td><td>$${(it.qty*it.price).toFixed(2)}</td></tr>`).join('')}
+            </tbody>
+          </table>
+
+          <div style="display:flex;justify-content:space-between;margin-top:12px">
+            <div class="small-muted">Shipping to</div>
+            <div style="text-align:right">
+              <div>${booking.customer.address}</div>
+              <div class="small-muted">${booking.customer.city} • ${booking.customer.postal}</div>
+            </div>
+          </div>
+
+          <div style="display:flex;justify-content:space-between;margin-top:12px;font-weight:800;color:var(--accent)">
+            <div>Total</div>
+            <div>$${booking.total.toFixed(2)}</div>
+          </div>
+        `;
+      }
+
+      // print button
+      const printBtn = document.getElementById('printBtn');
+      printBtn.addEventListener('click', ()=> window.print());
+    })();
+  </script>
+</body>
+</html>
