@@ -1,0 +1,248 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Panel — Premium Store</title>
+
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
+
+  <style>
+    .admin-container{
+      max-width:1100px;
+      margin:40px auto;
+      padding:20px;
+      display:grid;
+      grid-template-columns: 1fr 400px;
+      gap:30px;
+    }
+    .admin-box{
+      background:linear-gradient(180deg,rgba(255,255,255,0.03),transparent);
+      padding:20px;
+      border-radius:14px;
+    }
+    .admin-box h2{ margin-bottom:20px; }
+
+    .form-group{
+      margin-bottom:18px;
+    }
+    .form-group label{
+      color:var(--muted); font-size:14px; margin-bottom:6px; display:block;
+    }
+    .form-group input{
+      width:100%; padding:12px; border:none;
+      border-radius:8px; background:rgba(255,255,255,0.05);
+      color:white; font-size:15px;
+    }
+
+    .preview-card{
+      text-align:center;
+      background:rgba(255,255,255,0.03);
+      border-radius:12px;
+      padding:16px;
+    }
+    .preview-card img{
+      width:100%; height:260px; object-fit:cover; border-radius:10px;
+      margin-bottom:10px;
+    }
+    .product-list{
+      margin-top:20px;
+    }
+    .product-item{
+      display:flex;
+      align-items:center;
+      gap:16px;
+      padding:14px 0;
+      border-bottom:1px solid rgba(255,255,255,0.05);
+    }
+    .product-item img{
+      width:70px;
+      height:70px;
+      border-radius:8px;
+      object-fit:cover;
+    }
+    .small-muted{ font-size:13px; color:var(--muted) }
+
+    @media(max-width:900px){
+      .admin-container{ grid-template-columns:1fr; }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container header-row">
+      <div class="left">
+        <button id="openSide" class="icon-btn">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <div class="brand">ADMIN<span class="accent">.</span></div>
+      </div>
+
+      <nav class="main-nav">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact Us</a>
+      </nav>
+
+      <div class="actions">
+        <button onclick="location.href='index.html'" class="btn ghost">Back to Store</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN ADMIN PANEL -->
+  <main class="admin-container">
+
+    <!-- LEFT: Add Product Form -->
+    <section class="admin-box">
+      <h2>Add New Product</h2>
+
+      <div class="form-group">
+        <label>Image URL</label>
+        <input id="imgInput" type="text" placeholder="https://example.com/image.jpg" />
+      </div>
+
+      <div class="form-group">
+        <label>Product Name</label>
+        <input id="nameInput" type="text" placeholder="Luxury Watch" />
+      </div>
+
+      <div class="form-group">
+        <label>Price (USD)</label>
+        <input id="priceInput" type="number" placeholder="199.99" />
+      </div>
+
+      <button id="saveProduct" class="btn primary" style="width:100%; margin-top:10px;">
+        <i class="fa-solid fa-plus"></i> Add Product
+      </button>
+
+      <div id="saveMessage" class="small-muted" style="margin-top:12px; display:none; color:#00ff9d">
+        ✔ Product Saved Successfully!
+      </div>
+    </section>
+
+    <!-- RIGHT: Preview + Product List -->
+    <section class="admin-box">
+      <h2>Preview</h2>
+
+      <div class="preview-card" id="previewCard">
+        <img id="previewImg" src="https://via.placeholder.com/600x400?text=Preview" />
+        <h3 id="previewName">Product Name</h3>
+        <p id="previewPrice">$0.00</p>
+      </div>
+
+      <h2 style="margin-top:30px">All Products</h2>
+      <div class="product-list" id="productList"></div>
+
+    </section>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    © <span id="year"></span> RAMEEL TANVEER. All Rights Reserved.
+  </footer>
+
+  <!-- JS -->
+  <script>
+    const PRODUCT_KEY = "premium_products";
+
+    document.getElementById("year").textContent = new Date().getFullYear();
+
+    function loadProducts(){
+      try{
+        return JSON.parse(localStorage.getItem(PRODUCT_KEY) || "[]");
+      }catch(err){
+        return [];
+      }
+    }
+
+    function saveProducts(list){
+      localStorage.setItem(PRODUCT_KEY, JSON.stringify(list));
+    }
+
+    // LIVE PREVIEW
+    const imgInput = document.getElementById("imgInput");
+    const nameInput = document.getElementById("nameInput");
+    const priceInput = document.getElementById("priceInput");
+
+    const prevImg = document.getElementById("previewImg");
+    const prevName = document.getElementById("previewName");
+    const prevPrice = document.getElementById("previewPrice");
+
+    imgInput.oninput = ()=> prevImg.src = imgInput.value || "https://via.placeholder.com/600x400";
+    nameInput.oninput = ()=> prevName.textContent = nameInput.value || "Product Name";
+    priceInput.oninput = ()=> prevPrice.textContent = priceInput.value ? `$${parseFloat(priceInput.value).toFixed(2)}` : "$0.00";
+
+    // SAVE PRODUCT
+    const saveBtn = document.getElementById("saveProduct");
+    const saveMessage = document.getElementById("saveMessage");
+
+    saveBtn.onclick = ()=>{
+      const image = imgInput.value.trim();
+      const name = nameInput.value.trim();
+      const price = parseFloat(priceInput.value.trim());
+
+      if(!image || !name || !price){
+        alert("Please fill all fields.");
+        return;
+      }
+
+      const newProduct = {
+        id: Date.now().toString(),
+        img: image,
+        name: name,
+        price: price
+      };
+
+      const products = loadProducts();
+      products.push(newProduct);
+      saveProducts(products);
+
+      saveMessage.style.display = "block";
+      setTimeout(()=> saveMessage.style.display = "none", 2000);
+
+      renderProductList();
+      imgInput.value = nameInput.value = priceInput.value = "";
+      prevImg.src = "https://via.placeholder.com/600x400";
+      prevName.textContent = "Product Name";
+      prevPrice.textContent = "$0.00";
+    };
+
+    // RENDER PRODUCT LIST
+    const productList = document.getElementById("productList");
+
+    function renderProductList(){
+      const products = loadProducts();
+      if(products.length === 0){
+        productList.innerHTML = `<p class="small-muted">No products added yet.</p>`;
+        return;
+      }
+
+      productList.innerHTML = products.map(p => `
+        <div class="product-item">
+          <img src="${p.img}">
+          <div style="flex:1">
+            <strong>${p.name}</strong>
+            <p class="small-muted">$${p.price.toFixed(2)}</p>
+          </div>
+          <button class="btn ghost" onclick="deleteProduct('${p.id}')">Delete</button>
+        </div>
+      `).join("");
+    }
+
+    function deleteProduct(id){
+      const products = loadProducts().filter(p => p.id !== id);
+      saveProducts(products);
+      renderProductList();
+    }
+
+    renderProductList();
+  </script>
+
+</body>
+</html>
