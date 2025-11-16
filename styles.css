@@ -116,3 +116,103 @@ body{
   .side-panel.open{left:0}
   .cart-drawer{width:100%}
 }
+.about-page {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.page-title {
+    font-size: 38px;
+    margin-bottom: 20px;
+    animation: fadeInDown 1s ease;
+}
+
+.about-content {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    flex-wrap: wrap;
+    margin-top: 30px;
+}
+
+.about-content img {
+    width: 420px;
+    height: auto;
+    border-radius: 12px;
+}
+
+.text-box {
+    max-width: 550px;
+    text-align: left;
+}
+
+.text-box h2 {
+    font-size: 26px;
+    margin-top: 20px;
+}
+
+.text-box ul {
+    margin-top: 10px;
+    padding-left: 20px;
+}
+.contact-page {
+    padding: 40px 20px;
+    text-align: center;
+}
+
+.contact-container {
+    margin-top: 30px;
+    display: flex;
+    gap: 40px;
+    flex-wrap: wrap;
+    justify-content: center;
+}
+
+.contact-info {
+    max-width: 300px;
+    text-align: left;
+}
+
+.social-icons i {
+    font-size: 28px;
+    margin-right: 10px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.social-icons i:hover {
+    color: #c92;
+}
+
+.contact-form {
+    width: 350px;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.contact-form input,
+.contact-form textarea {
+    padding: 12px;
+    border-radius: 8px;
+    border: 1px solid #ccc;
+}
+
+.contact-form textarea {
+    height: 120px;
+    resize: none;
+}
+
+.send-btn {
+    background: #c92;
+    color: white;
+    border: none;
+    padding: 12px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.send-btn:hover {
+    opacity: 0.8;
+}
