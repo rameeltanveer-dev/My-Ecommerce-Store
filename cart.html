@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Cart — Premium Store</title>
+
+  <!-- Link to your main styles (keeps consistent look) -->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+
+  <style>
+    /* Page-specific small overrides for layout */
+    .cart-page { max-width: 1100px; margin: 36px auto; padding: 0 20px; }
+    .cart-hero { display:flex; align-items:center; justify-content:space-between; gap:16px; margin-bottom:18px; flex-wrap:wrap; }
+    .cart-hero h1{ margin:0; font-size:26px }
+    .cart-grid { display:grid; grid-template-columns: 1fr 360px; gap:20px; align-items:start; }
+    .cart-items { background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent); padding: 16px; border-radius: 12px; }
+    .cart-row { display:flex; gap:12px; padding:12px 0; align-items:center; border-bottom:1px solid rgba(255,255,255,0.03); }
+    .cart-row:last-child{ border-bottom: none }
+    .cart-row img{ width:96px; height:96px; object-fit:cover; border-radius:8px }
+    .cart-info{ flex:1 }
+    .cart-actions-right{ display:flex; flex-direction:column; gap:8px; align-items:flex-end; }
+    .qty-controls{ display:flex; gap:8px; align-items:center; margin-top:8px }
+    .qty-controls button{ padding:6px 8px; border-radius:8px; border:none; background:rgba(255,255,255,0.03); cursor:pointer; }
+    .summary-card{ background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent); padding:16px; border-radius:12px; }
+    .summary-row{ display:flex; justify-content:space-between; margin-bottom:8px; color:var(--muted) }
+    .summary-total{ font-weight:900; font-size:20px; color:var(--accent) }
+    .small-muted{ color:var(--muted); font-size:13px }
+    @media (max-width:900px){
+      .cart-grid{ grid-template-columns: 1fr; }
+      .cart-actions-right{ align-items:flex-start; }
+    }
+
+    /* Mini-cart popup (top-right) overrides to ensure visible on this page too */
+    .mini-cart { position: fixed; right: 18px; top: 88px; width: 320px; max-height: 420px; overflow:auto; background:#07121a; border-radius:12px; padding:12px; box-shadow:0 18px 40px rgba(0,0,0,0.6); z-index:120; display:none }
+    .mini-cart.open { display:block }
+    .mini-cart .mini-item{ display:flex; gap:10px; align-items:center; padding:8px 0; border-bottom:1px solid rgba(255,255,255,0.02) }
+    .mini-cart .mini-item img{ width:56px; height:56px; object-fit:cover; border-radius:6px }
+    .mini-cart .mini-footer{ padding-top:10px; display:flex; justify-content:space-between; align-items:center }
+  </style>
+</head>
+<body>
+
+  <!-- Header (keeps consistent navigation/brand) -->
+  <header class="header">
+    <div class="container header-row">
+      <div class="left">
+        <button id="openSide" class="icon-btn" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+        <div class="brand">PREMIUM<span class="accent">.</span></div>
+      </div>
+
+      <nav class="main-nav" role="navigation">
+        <a href="index.html">Home</a>
+        <a href="about.html">About</a>
+        <a href="contact.html">Contact Us</a>
+      </nav>
+
+      <div class="actions">
+        <button class="btn ghost" onclick="location.href='login.html'">Log In</button>
+        <button class="btn primary" onclick="location.href='signup.html'">Sign Up</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Cart Page Content -->
+  <main class="cart-page">
+    <div class="cart-hero">
+      <h1>Your Shopping Cart</h1>
+      <div class="small-muted">You have <span id="cartCountTop">0</span> items in your cart</div>
+    </div>
+
+    <div class="cart-grid">
+      <section class="cart-items" id="cartList" aria-live="polite">
+        <!-- JS will render cart rows here -->
+        <p class="small-muted">Loading cart…</p>
+      </section>
+
+      <aside class="summary-card" aria-label="Order summary">
+        <h3>Order Summary</h3>
+        <div id="summaryRows" style="margin-top:10px"></div>
+        <div class="summary-row" style="margin-top:12px">
+          <div class="small-muted">Shipping</div>
+          <div class="small-muted">—</div>
+        </div>
+        <div class="summary-row summary-total">
+          <div>Total</div>
+          <div id="summaryTotal">$0.00</div>
+        </div>
+
+        <div style="margin-top:14px; display:flex; gap:10px;">
+          <button id="clearCartBtn" class="btn ghost">Clear Cart</button>
+          <button id="goCheckout" class="btn primary">Proceed to Checkout</button>
+        </div>
+      </aside>
+    </div>
+  </main>
+
+  <!-- Mini Cart Toggle (top-right small button) -->
+  <button id="miniToggle" style="position:fixed; right:18px; top:18px; z-index:130;" class="cart-btn" aria-label="Open mini cart">
+    <i class="fa-solid fa-cart-shopping"></i>
+    <span id="miniCount" class="cart-count">0</span>
+  </button>
+
+  <!-- Mini Cart Popup -->
+  <div class="mini-cart" id="miniCart" aria-hidden="true">
+    <div id="miniItems">
+      <!-- JS populates -->
+      <p class="small-muted">No items</p>
+    </div>
+    <div class="mini-footer">
+      <div class="small-muted">Total: <strong id="miniTotal">$0.00</strong></div>
+      <div>
+        <button id="miniCheckout" class="btn primary">Checkout</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <div>© <span id="year"></span> RAMEEL TANVEER. All Rights Reserved.</div>
+  </footer>
+
+  <!-- Page JS (cart rendering + mini cart) -->
+  <script>
+    (function(){
+      const CART_KEY = 'premium_cart_v2'; // same key used by site
+      const cartList = document.getElementById('cartList');
+      const summaryRows = document.getElementById('summaryRows');
+      const summaryTotal = document.getElementById('summaryTotal');
+      const cartCountTop = document.getElementById('cartCountTop');
+      const clearCartBtn = document.getElementById('clearCartBtn');
+      const goCheckout = document.getElementById('goCheckout');
+      const yearEl = document.getElementById('year');
+
+      /* Mini cart elements */
+      const miniToggle = document.getElementById('miniToggle');
+      const miniCart = document.getElementById('miniCart');
+      const miniItems = document.getElementById('miniItems');
+      const miniTotal = document.getElementById('miniTotal');
+      const miniCount = document.getElementById('miniCount');
+      const miniCheckout = document.getElementById('miniCheckout');
+
+      yearEl && (yearEl.textContent = new Date().getFullYear());
+
+      function loadCart(){
+        try {
+          return JSON.parse(localStorage.getItem(CART_KEY) || '{}');
+        } catch (e) {
+          return {};
+        }
+      }
+
+      function saveCart(cart){
+        localStorage.setItem(CART_KEY, JSON.stringify(cart || {}));
+        renderAll();
+      }
+
+      function compute(cart){
+        const items = Object.values(cart);
+        const qty = items.reduce((s,i)=>s+i.qty,0);
+        const total = items.reduce((s,i)=>s + (i.qty * i.price), 0);
+        return { items, qty, total };
+      }
+
+      function renderAll(){
+        const cart = loadCart();
+        const { items, qty, total } = compute(cart);
+
+        // top count
+        cartCountTop.textContent = qty;
+        miniCount.textContent = qty;
+
+        // main cart list
+        cartList.innerHTML = '';
+        if(items.length === 0){
+          cartList.innerHTML = '<p class="small-muted">Your cart is empty. Browse products to add items.</p>';
+        } else {
+          items.forEach(item => {
+            const row = document.createElement('div');
+            row.className = 'cart-row';
+            row.innerHTML = `
+              <img src="${item.img}" alt="${item.name}">
+              <div class="cart-info">
+                <strong>${item.name}</strong>
+                <div class="small-muted">${item.price.toFixed(2)} USD</div>
+                <div class="qty-controls" style="margin-top:8px;">
+                  <button class="qty-decrease" data-id="${item.id}">−</button>
+                  <span style="padding:6px 10px;background:rgba(255,255,255,0.03);border-radius:6px">${item.qty}</span>
+                  <button class="qty-increase" data-id="${item.id}">+</button>
+                  <button class="remove-item" data-id="${item.id}" style="margin-left:12px;background:none;border:none;color:var(--muted);cursor:pointer">Remove</button>
+                </div>
+              </div>
+              <div class="cart-actions-right">
+                <div class="small-muted">Subtotal</div>
+                <div style="font-weight:800;color:var(--accent)">$${(item.qty * item.price).toFixed(2)}</div>
+              </div>
+            `;
+            cartList.appendChild(row);
+          });
+        }
+
+        // summary
+        summaryRows.innerHTML = items.map(it => `
+          <div style="display:flex;justify-content:space-between;margin-bottom:6px">
+            <div class="small-muted">${it.name} × ${it.qty}</div>
+            <div class="small-muted">$${(it.qty * it.price).toFixed(2)}</div>
+          </div>
+        `).join('');
+        summaryTotal.textContent = `$${total.toFixed(2)}`;
+
+        // mini cart render
+        if(items.length === 0){
+          miniItems.innerHTML = '<p class="small-muted">No items</p>';
+        } else {
+          miniItems.innerHTML = items.map(it => `
+            <div class="mini-item">
+              <img src="${it.img}" alt="${it.name}">
+              <div style="flex:1">
+                <div style="display:flex;justify-content:space-between;align-items:center"><strong style="font-size:14px">${it.name}</strong><small class="small-muted">$${(it.price).toFixed(2)}</small></div>
+                <div class="small-muted">${it.qty} × $${it.price.toFixed(2)}</div>
+              </div>
+            </div>
+          `).join('');
+        }
+        miniTotal.textContent = `$${total.toFixed(2)}`;
+
+        // attach handlers for the main list
+        attachRowHandlers();
+      }
+
+      function attachRowHandlers(){
+        const cart = loadCart();
+        // qty increase
+        document.querySelectorAll('.qty-increase').forEach(btn=>{
+          btn.onclick = (e)=>{
+            const id = e.currentTarget.dataset.id;
+            if(!cart[id]) return;
+            cart[id].qty += 1;
+            saveCart(cart);
+          };
+        });
+        // qty decrease
+        document.querySelectorAll('.qty-decrease').forEach(btn=>{
+          btn.onclick = (e)=>{
+            const id = e.currentTarget.dataset.id;
+            if(!cart[id]) return;
+            cart[id].qty = Math.max(0, cart[id].qty - 1);
+            if(cart[id].qty === 0) delete cart[id];
+            saveCart(cart);
+          };
+        });
+        // remove
+        document.querySelectorAll('.remove-item').forEach(btn=>{
+          btn.onclick = (e)=>{
+            const id = e.currentTarget.dataset.id;
+            if(cart[id]) delete cart[id];
+            saveCart(cart);
+          };
+        });
+      }
+
+      // clear and checkout actions
+      clearCartBtn.addEventListener('click', ()=> {
+        if(confirm('Clear all items from cart?')) {
+          saveCart({});
+        }
+      });
+      goCheckout.addEventListener('click', ()=> {
+        // navigate to checkout page (will be created next)
+        location.href = 'checkout.html';
+      });
+
+      /* Mini cart toggle */
+      miniToggle.addEventListener('click', ()=>{
+        miniCart.classList.toggle('open');
+        miniCart.setAttribute('aria-hidden', miniCart.classList.contains('open') ? 'false' : 'true');
+      });
+      miniCheckout.addEventListener('click', ()=> location.href = 'checkout.html');
+
+      // Close mini cart when clicking outside
+      document.addEventListener('click', (e)=>{
+        if(!miniCart.contains(e.target) && !miniToggle.contains(e.target)) {
+          miniCart.classList.remove('open');
+          miniCart.setAttribute('aria-hidden','true');
+        }
+      });
+
+      // initial render
+      renderAll();
+
+      // Keep sync across tabs: listen storage events
+      window.addEventListener('storage', (e) => {
+        if(e.key === CART_KEY) renderAll();
+      });
+    })();
+  </script>
+
+</body>
+  </html>
