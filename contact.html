@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Contact Us — Premium Store</title>
+
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+</head>
+
+<body>
+
+<header>
+    <div class="nav-container">
+        <i class="fas fa-bars hamburger" id="openMenu"></i>
+
+        <nav class="center-nav">
+            <a href="index.html">Home</a>
+            <a href="about.html">About</a>
+            <a href="contact.html" class="active">Contact Us</a>
+        </nav>
+
+        <div class="right-nav">
+            <a href="login.html" class="login-btn">Log In</a>
+            <a href="signup.html" class="signup-btn">Sign Up</a>
+        </div>
+    </div>
+</header>
+
+<div id="sideMenu" class="side-menu">
+    <a href="#" id="closeMenu" class="close-btn">&times;</a>
+    <a href="index.html">Home</a>
+    <a href="about.html">About</a>
+    <a href="contact.html">Contact Us</a>
+
+    <div class="bottom-links">
+        <a href="login.html">Log In</a>
+        <a href="signup.html">Sign Up</a>
+    </div>
+</div>
+
+<section class="contact-page">
+    <h1 class="page-title">Contact Us</h1>
+
+    <div class="contact-container">
+        
+        <div class="contact-info">
+            <h2>Get in Touch</h2>
+            <p><i class="fas fa-phone"></i> +92 300 1234567</p>
+            <p><i class="fas fa-envelope"></i> support@premiumstore.com</p>
+            <p><i class="fas fa-map-marker-alt"></i> Lahore, Pakistan</p>
+
+            <h2>Follow Us</h2>
+            <div class="social-icons">
+                <i class="fab fa-facebook"></i>
+                <i class="fab fa-instagram"></i>
+                <i class="fab fa-twitter"></i>
+            </div>
+        </div>
+
+        <form class="contact-form">
+            <input type="text" placeholder="Full Name" required>
+            <input type="email" placeholder="Email Address" required>
+            <textarea placeholder="Your Message..." required></textarea>
+            <button type="submit" class="send-btn">Send Message</button>
+        </form>
+    </div>
+
+</section>
+
+<footer>
+    © <span id="year"></span> RAMEEL TANVEER. All Rights Reserved.
+</footer>
+
+<script src="script.js"></script>
+</body>
+</html>
