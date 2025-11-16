@@ -1,0 +1,211 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Premium Store — Watches & Perfumes</title>
+
+  <!-- styles -->
+  <link rel="stylesheet" href="styles.css">
+
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+  <!-- SIDE PANEL (hamburger) -->
+  <aside class="side-panel" id="sidePanel" aria-hidden="true">
+    <button class="close-side" id="closeSide" aria-label="Close menu">&times;</button>
+    <nav class="side-links" aria-label="Side navigation">
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#contact">Contact Us</a>
+    </nav>
+    <div class="side-bottom">
+      <a class="btn small" href="login.html">Log In</a>
+      <a class="btn small primary" href="signup.html">Sign Up</a>
+    </div>
+  </aside>
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container header-row">
+      <div class="left">
+        <button id="openSide" class="icon-btn" aria-label="Open menu"><i class="fa-solid fa-bars"></i></button>
+        <div class="brand">PREMIUM<span class="accent">.</span></div>
+      </div>
+
+      <nav class="main-nav" role="navigation" aria-label="Main">
+        <a href="#home">Home</a>
+        <a href="#about">About</a>
+        <a href="#contact">Contact Us</a>
+      </nav>
+
+      <div class="actions">
+        <button class="btn ghost" onclick="location.href='login.html'">Log In</button>
+        <button class="btn primary" onclick="location.href='signup.html'">Sign Up</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- PRE-HERO -->
+  <section class="pre-hero" id="home">
+    <div class="container">
+      <h1 class="animated-title">Welcome to Our Store</h1>
+      <p class="subtitle">Experience luxury and style with our curated collection of exquisite watches and sophisticated perfumes.</p>
+      <div class="badge">AFFORDABLE PRICE</div>
+    </div>
+  </section>
+
+  <!-- HERO / SLIDER -->
+  <section class="hero">
+    <div class="slides" id="slides">
+      <div class="slide">
+        <img src="https://images.unsplash.com/photo-1516728778615-2d590ea1856f?q=80&w=1600&auto=format&fit=crop" alt="Watch on wrist">
+      </div>
+      <div class="slide">
+        <img src="https://images.unsplash.com/photo-1523294587484-bae6cc870010?q=80&w=1600&auto=format&fit=crop" alt="Perfume bottle">
+      </div>
+      <div class="slide">
+        <img src="https://images.unsplash.com/photo-1508672019048-805c876b67e2?q=80&w=1600&auto=format&fit=crop" alt="Perfume with flowers">
+      </div>
+    </div>
+
+    <div class="hero-overlay">
+      <h2>Curated Watches & Exquisite Perfumes</h2>
+      <p>Hand-picked premium pieces that speak to elegance and craftsmanship.</p>
+      <div class="hero-cta">
+        <a href="#products" class="btn primary">Shop Now</a>
+        <a href="#products" class="link">Browse collection <i class="fa-solid fa-arrow-right"></i></a>
+      </div>
+    </div>
+
+    <div class="slider-controls">
+      <button id="prev" class="icon-btn" aria-label="Previous slide"><i class="fa-solid fa-chevron-left"></i></button>
+      <button id="next" class="icon-btn" aria-label="Next slide"><i class="fa-solid fa-chevron-right"></i></button>
+    </div>
+  </section>
+
+  <!-- MAIN / PRODUCTS -->
+  <main id="products">
+    <section class="section container">
+      <h2 class="section-title">Watches</h2>
+      <div class="grid" id="watchGrid">
+
+        <!-- Product cards -->
+        <article class="card" data-id="w1" data-name="Chrono Elite 42" data-price="249.99" data-img="https://images.unsplash.com/photo-1526178616644-3b6be7d4f9f6?q=80&w=1200&auto=format&fit=crop">
+          <img src="https://images.unsplash.com/photo-1526178616644-3b6be7d4f9f6?q=80&w=1200&auto=format&fit=crop" alt="Chrono Elite 42">
+          <h3>Chrono Elite 42</h3>
+          <p class="meta">Stainless steel • Automatic</p>
+          <div class="card-foot">
+            <div class="price">$249.99</div>
+            <div class="card-actions">
+              <button class="btn add-cart" aria-label="Add Chrono Elite 42 to cart">Add to Cart</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="card" data-id="w2" data-name="Minimal Classic" data-price="129.50" data-img="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1200&auto=format&fit=crop">
+          <img src="https://images.unsplash.com/photo-1523275335684-37898b6baf30?q=80&w=1200&auto=format&fit=crop" alt="Minimal Classic">
+          <h3>Minimal Classic</h3>
+          <p class="meta">Leather strap • Quartz</p>
+          <div class="card-foot">
+            <div class="price">$129.50</div>
+            <div class="card-actions">
+              <button class="btn add-cart" aria-label="Add Minimal Classic to cart">Add to Cart</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="card" data-id="w3" data-name="Regal Gold" data-price="399.00" data-img="https://images.unsplash.com/photo-1524805444758-089113d48cca?q=80&w=1200&auto=format&fit=crop">
+          <img src="https://images.unsplash.com/photo-1524805444758-089113d48cca?q=80&w=1200&auto=format&fit=crop" alt="Regal Gold">
+          <h3>Regal Gold</h3>
+          <p class="meta">Gold plated • Limited</p>
+          <div class="card-foot">
+            <div class="price">$399.00</div>
+            <div class="card-actions">
+              <button class="btn add-cart" aria-label="Add Regal Gold to cart">Add to Cart</button>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+
+    <section class="section container">
+      <h2 class="section-title">Perfumes</h2>
+      <div class="grid" id="perfumeGrid">
+
+        <article class="card" data-id="p1" data-name="Noir Essence" data-price="89.99" data-img="https://images.unsplash.com/photo-1523294587484-bae6cc870010?q=80&w=1200&auto=format&fit=crop">
+          <img src="https://images.unsplash.com/photo-1523294587484-bae6cc870010?q=80&w=1200&auto=format&fit=crop" alt="Noir Essence">
+          <h3>Noir Essence</h3>
+          <p class="meta">Eau de Parfum • 50ml</p>
+          <div class="card-foot">
+            <div class="price">$89.99</div>
+            <div class="card-actions">
+              <button class="btn add-cart" aria-label="Add Noir Essence to cart">Add to Cart</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="card" data-id="p2" data-name="Amber Ritual" data-price="109.00" data-img="https://images.unsplash.com/photo-1600185365483-26d7a4d0f5b7?q=80&w=1200&auto=format&fit=crop">
+          <img src="https://images.unsplash.com/photo-1600185365483-26d7a4d0f5b7?q=80&w=1200&auto=format&fit=crop" alt="Amber Ritual">
+          <h3>Amber Ritual</h3>
+          <p class="meta">Intense • 50ml</p>
+          <div class="card-foot">
+            <div class="price">$109.00</div>
+            <div class="card-actions">
+              <button class="btn add-cart" aria-label="Add Amber Ritual to cart">Add to Cart</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="card" data-id="p3" data-name="Classic Oud" data-price="139.99" data-img="https://images.unsplash.com/photo-1526401485004-9828b6b8b1b0?q=80&w=1200&auto=format&fit=crop">
+          <img src="https://images.unsplash.com/photo-1526401485004-9828b6b8b1b0?q=80&w=1200&auto=format&fit=crop" alt="Classic Oud">
+          <h3>Classic Oud</h3>
+          <p class="meta">Traditional blend • 100ml</p>
+          <div class="card-foot">
+            <div class="price">$139.99</div>
+            <div class="card-actions">
+              <button class="btn add-cart" aria-label="Add Classic Oud to cart">Add to Cart</button>
+            </div>
+          </div>
+        </article>
+
+      </div>
+    </section>
+  </main>
+
+  <!-- CART FLOAT BUTTON -->
+  <button id="cartBtn" class="cart-btn" aria-label="Open cart">
+    <i class="fa-solid fa-cart-shopping"></i>
+    <span id="cartCount" class="cart-count">0</span>
+  </button>
+
+  <!-- CART DRAWER -->
+  <aside class="cart-drawer" id="cartDrawer" aria-hidden="true">
+    <div class="cart-head">
+      <h3>Your Cart</h3>
+      <button id="closeCart" class="icon-btn" aria-label="Close cart">&times;</button>
+    </div>
+    <div class="cart-body" id="cartItems">
+      <!-- items rendered here -->
+    </div>
+    <div class="cart-footer">
+      <div class="total">Total: <strong id="cartTotal">$0.00</strong></div>
+      <div class="cart-actions">
+        <button id="clearCart" class="btn ghost">Clear</button>
+        <button id="checkout" class="btn primary">Checkout</button>
+      </div>
+    </div>
+  </aside>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div>© <span id="year"></span> RAMEEL TANVEER. All Rights Reserved.</div>
+  </footer>
+
+  <!-- JS -->
+  <script src="script.js"></script>
+</body>
+  </html>
