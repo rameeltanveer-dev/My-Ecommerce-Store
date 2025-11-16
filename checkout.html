@@ -41,11 +41,9 @@
       display:none; text-align:center; padding:20px;
       background:rgba(0,255,140,0.08); border-radius:12px; margin-top:20px;
     }
-
+    .small-muted{ color:var(--muted); }
     @media(max-width:900px){
-      .checkout-container{
-        grid-template-columns:1fr;
-      }
+      .checkout-container{ grid-template-columns:1fr; }
     }
   </style>
 </head>
@@ -76,47 +74,52 @@
 
     <!-- LEFT SIDE — FORM -->
     <form id="checkoutForm" class="checkout-box">
-      <h2>Billing Details</h2>
+      <h2>Billing & Booking Details</h2>
 
       <div class="form-group">
         <label>Full Name</label>
-        <input required type="text" placeholder="John Doe">
+        <input required type="text" id="fullName" placeholder="John Doe">
       </div>
 
       <div class="form-group">
         <label>Email Address</label>
-        <input required type="email" placeholder="you@example.com">
+        <input required type="email" id="email" placeholder="you@example.com">
       </div>
 
       <div class="form-group">
         <label>Phone Number</label>
-        <input required type="text" placeholder="+123 456 789">
+        <input required type="text" id="phone" placeholder="+92 300 1234567">
+      </div>
+
+      <div class="form-group">
+        <label>Preferred Delivery / Booking Date (optional)</label>
+        <input type="date" id="preferredDate">
       </div>
 
       <h2 style="margin-top:25px">Shipping Address</h2>
 
       <div class="form-group">
         <label>Address</label>
-        <input required type="text" placeholder="House number, street">
+        <input required type="text" id="address" placeholder="House number, street">
       </div>
 
       <div class="form-group">
         <label>City</label>
-        <input required type="text" placeholder="City">
+        <input required type="text" id="city" placeholder="City">
       </div>
 
       <div class="form-group">
         <label>Postal Code</label>
-        <input required type="text" placeholder="Postal / ZIP code">
+        <input required type="text" id="postal" placeholder="Postal / ZIP code">
       </div>
 
-      <button class="btn primary" style="margin-top:20px; width:100%">
-        <i class="fa-solid fa-lock"></i> Place Order
+      <button class="btn primary" style="margin-top:20px; width:100%" type="submit">
+        <i class="fa-solid fa-lock"></i> Place Booking
       </button>
 
       <div class="success-box" id="successBox">
-        <h3><i class="fa-solid fa-circle-check"></i> Order Placed Successfully!</h3>
-        <p>Thank you for shopping with us.</p>
+        <h3><i class="fa-solid fa-circle-check"></i> Booking Placed!</h3>
+        <p>Redirecting to confirmation…</p>
       </div>
     </form>
 
@@ -129,6 +132,7 @@
         <div>Total</div>
         <div id="summaryTotal">$0.00</div>
       </div>
+      <p class="small-muted" style="margin-top:8px">Note: This demo stores bookings locally only. For real orders integrate a backend or payment gateway.</p>
     </aside>
 
   </main>
@@ -140,66 +144,101 @@
 
   <!-- JS -->
   <script>
-    const CART_KEY = "premium_cart_v2";
+    (function(){
+      const CART_KEY = 'premium_cart_v2';
+      const BOOKING_KEY = 'premium_bookings'; // new storage key for bookings
 
-    document.getElementById("year").textContent = new Date().getFullYear();
+      // helper
+      const $ = s => document.querySelector(s);
+      const $all = s => Array.from(document.querySelectorAll(s));
 
-    function loadCart(){
-      try { return JSON.parse(localStorage.getItem(CART_KEY) || '{}'); }
-      catch(e){ return {}; }
-    }
+      // set year
+      const yearEl = document.getElementById('year');
+      if(yearEl) yearEl.textContent = new Date().getFullYear();
 
-    function compute(cart){
-      const items = Object.values(cart);
-      return {
-        items,
-        total: items.reduce((s,i)=> s + i.qty * i.price, 0)
-      };
-    }
-
-    // Render order summary
-    const summaryList = document.getElementById("summaryList");
-    const summaryTotal = document.getElementById("summaryTotal");
-
-    function renderSummary(){
-      const cart = loadCart();
-      const {items, total} = compute(cart);
-
-      if(items.length === 0){
-        summaryList.innerHTML = `<p class="small-muted">Your cart is empty.</p>`;
-        summaryTotal.textContent = "$0.00";
-        return;
+      function loadCart(){
+        try { return JSON.parse(localStorage.getItem(CART_KEY) || '{}'); } catch(e) { return {}; }
+      }
+      function compute(cart){
+        const items = Object.values(cart);
+        const total = items.reduce((s,i) => s + (i.qty * i.price), 0);
+        return { items, total };
       }
 
-      summaryList.innerHTML = items.map(i => `
-        <div class="order-summary-item">
-          <span>${i.name} × ${i.qty}</span>
-          <span>$${(i.qty * i.price).toFixed(2)}</span>
-        </div>
-      `).join("");
+      function renderSummary(){
+        const cart = loadCart();
+        const { items, total } = compute(cart);
+        const summaryList = document.getElementById('summaryList');
+        const summaryTotal = document.getElementById('summaryTotal');
+        if(!summaryList || !summaryTotal) return;
+        if(items.length === 0){
+          summaryList.innerHTML = '<p class="small-muted">Your cart is empty.</p>';
+          summaryTotal.textContent = '$0.00';
+          return;
+        }
+        summaryList.innerHTML = items.map(it => `
+          <div class="order-summary-item">
+            <span>${it.name} × ${it.qty}</span>
+            <span>$${(it.qty*it.price).toFixed(2)}</span>
+          </div>
+        `).join('');
+        summaryTotal.textContent = `$${total.toFixed(2)}`;
+      }
 
-      summaryTotal.textContent = `$${total.toFixed(2)}`;
-    }
-    renderSummary();
+      renderSummary();
 
-    // Form submit animation
-    const form = document.getElementById("checkoutForm");
-    const successBox = document.getElementById("successBox");
+      // Booking logic on submit
+      const form = document.getElementById('checkoutForm');
+      const successBox = document.getElementById('successBox');
 
-    form.addEventListener("submit", function(e){
-      e.preventDefault();
+      form.addEventListener('submit', function(e){
+        e.preventDefault();
 
-      successBox.style.display = "block";
-      successBox.style.animation = "fadeIn .8s ease";
+        const cart = loadCart();
+        const { items, total } = compute(cart);
+        if(items.length === 0){
+          alert('Your cart is empty. Add items before placing booking.');
+          return;
+        }
 
-      // CLEAR CART after order
-      localStorage.removeItem(CART_KEY);
+        // gather form values
+        const data = {
+          id: 'BKG-' + Date.now(),
+          createdAt: (new Date()).toISOString(),
+          customer: {
+            name: document.getElementById('fullName').value.trim(),
+            email: document.getElementById('email').value.trim(),
+            phone: document.getElementById('phone').value.trim(),
+            address: document.getElementById('address').value.trim(),
+            city: document.getElementById('city').value.trim(),
+            postal: document.getElementById('postal').value.trim(),
+            preferredDate: document.getElementById('preferredDate').value || null
+          },
+          items: items,
+          total: total
+        };
 
-      setTimeout(() => {
-        window.location.href = "index.html";
-      }, 2500);
-    });
+        // save booking to localStorage (array)
+        try {
+          const raw = localStorage.getItem(BOOKING_KEY) || '[]';
+          const list = JSON.parse(raw);
+          list.push(data);
+          localStorage.setItem(BOOKING_KEY, JSON.stringify(list));
+        } catch (err) {
+          console.error('Failed to save booking', err);
+        }
+
+        // clear the cart
+        localStorage.removeItem(CART_KEY);
+
+        // show success and redirect to confirmation with id
+        successBox.style.display = 'block';
+        setTimeout(() => {
+          location.href = `booking-confirmation.html?id=${encodeURIComponent(data.id)}`;
+        }, 900);
+      });
+
+    })();
   </script>
-
 </body>
 </html>
