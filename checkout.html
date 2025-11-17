@@ -1,68 +1,36 @@
-<!doctype html>
+
+      <!doctype html>
 <html lang="en">
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1">
   <title>Checkout — Premium Store</title>
-
   <link rel="stylesheet" href="styles.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"/>
-
   <style>
-    .checkout-container{
-      max-width: 1100px;
-      margin: 40px auto;
-      padding: 0 20px;
-      display:grid;
-      grid-template-columns: 1fr 380px;
-      gap:30px;
-    }
-    .checkout-box{
-      background: linear-gradient(180deg,rgba(255,255,255,0.03),transparent);
-      padding:20px;
-      border-radius:14px;
-    }
-    .checkout-box h2{ margin-bottom:15px; }
-    .form-group{ margin-bottom:16px; }
-    .form-group label{ display:block; font-size:14px; margin-bottom:4px; color:var(--muted) }
-    .form-group input,textarea,select{
-      width:100%; padding:12px; border-radius:8px; border:none;
-      background:rgba(255,255,255,0.05); color:white; font-size:15px;
-    }
-    .order-summary-item{
-      display:flex; justify-content:space-between;
-      padding:10px 0; border-bottom:1px solid rgba(255,255,255,0.05);
-    }
-    .total-row{
-      display:flex; justify-content:space-between; padding-top:15px;
-      font-size:20px; font-weight:800; color:var(--accent);
-    }
-    .success-box{
-      display:none; text-align:center; padding:20px;
-      background:rgba(0,255,140,0.08); border-radius:12px; margin-top:20px;
-    }
-    .small-muted{ color:var(--muted); }
-    @media(max-width:900px){
-      .checkout-container{ grid-template-columns:1fr; }
-    }
+    .checkout-container{max-width:1100px;margin:40px auto;padding:0 20px;display:grid;grid-template-columns:1fr 380px;gap:30px}
+    .checkout-box{background:linear-gradient(180deg,rgba(255,255,255,0.03),transparent);padding:20px;border-radius:14px}
+    .form-group{margin-bottom:16px}
+    .form-group label{display:block;font-size:14px;margin-bottom:4px;color:var(--muted)}
+    .form-group input,textarea,select{width:100%;padding:12px;border-radius:8px;border:none;background:rgba(255,255,255,0.05);color:white;font-size:15px}
+    .order-summary-item{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid rgba(255,255,255,0.05)}
+    .total-row{display:flex;justify-content:space-between;padding-top:15px;font-size:20px;font-weight:800;color:var(--accent)}
+    .success-box{display:none;text-align:center;padding:20px;background:rgba(0,255,140,0.08);border-radius:12px;margin-top:20px}
   </style>
 </head>
 <body>
-
-  <!-- HEADER -->
   <header class="header">
     <div class="container header-row">
       <div class="left">
         <button id="openSide" class="icon-btn"><i class="fa-solid fa-bars"></i></button>
-        <div class="brand">PREMIUM<span class="accent">.</span></div>
+      <div class="brand">PREMI<span class="accent">UM</span></div>
       </div>
-
       <nav class="main-nav">
         <a href="index.html">Home</a>
         <a href="about.html">About</a>
-        <a href="contact.html">Contact Us</a>
+        <a href="cart.html">Booking</a>
+        <a href="contact.html">Contact</a>
       </nav>
-
       <div class="actions">
         <button class="btn ghost" onclick="location.href='login.html'">Log In</button>
         <button class="btn primary" onclick="location.href='signup.html'">Sign Up</button>
@@ -71,76 +39,34 @@
   </header>
 
   <main class="checkout-container">
-
-    <!-- LEFT SIDE — FORM -->
     <form id="checkoutForm" class="checkout-box">
       <h2>Billing & Booking Details</h2>
 
-      <div class="form-group">
-        <label>Full Name</label>
-        <input required type="text" id="fullName" placeholder="John Doe">
-      </div>
-
-      <div class="form-group">
-        <label>Email Address</label>
-        <input required type="email" id="email" placeholder="you@example.com">
-      </div>
-
-      <div class="form-group">
-        <label>Phone Number</label>
-        <input required type="text" id="phone" placeholder="+92 300 1234567">
-      </div>
-
-      <div class="form-group">
-        <label>Preferred Delivery / Booking Date (optional)</label>
-        <input type="date" id="preferredDate">
-      </div>
+      <div class="form-group"><label>Full Name</label><input required type="text" id="fullName" placeholder="John Doe"></div>
+      <div class="form-group"><label>Email Address</label><input required type="email" id="email" placeholder="you@example.com"></div>
+      <div class="form-group"><label>Phone Number</label><input required type="text" id="phone" placeholder="+92 300 1234567"></div>
+      <div class="form-group"><label>Preferred Delivery / Booking Date (optional)</label><input type="date" id="preferredDate"></div>
 
       <h2 style="margin-top:25px">Shipping Address</h2>
+      <div class="form-group"><label>Address</label><input required type="text" id="address" placeholder="House number, street"></div>
+      <div class="form-group"><label>City</label><input required type="text" id="city" placeholder="City"></div>
+      <div class="form-group"><label>Postal Code</label><input required type="text" id="postal" placeholder="Postal / ZIP code"></div>
 
-      <div class="form-group">
-        <label>Address</label>
-        <input required type="text" id="address" placeholder="House number, street">
-      </div>
+      <button class="btn primary" style="margin-top:20px; width:100%" type="submit"><i class="fa-solid fa-lock"></i> Place Booking</button>
 
-      <div class="form-group">
-        <label>City</label>
-        <input required type="text" id="city" placeholder="City">
-      </div>
-
-      <div class="form-group">
-        <label>Postal Code</label>
-        <input required type="text" id="postal" placeholder="Postal / ZIP code">
-      </div>
-
-      <button class="btn primary" style="margin-top:20px; width:100%" type="submit">
-        <i class="fa-solid fa-lock"></i> Place Booking
-      </button>
-
-      <div class="success-box" id="successBox">
-        <h3><i class="fa-solid fa-circle-check"></i> Booking Placed!</h3>
-        <p>Redirecting to confirmation…</p>
-      </div>
+      <div class="success-box" id="successBox"><h3><i class="fa-solid fa-circle-check"></i> Booking Placed!</h3><p>Redirecting to confirmation…</p></div>
     </form>
 
-    <!-- RIGHT SIDE — ORDER SUMMARY -->
     <aside class="checkout-box">
       <h2>Order Summary</h2>
       <div id="summaryList"></div>
-
-      <div class="total-row">
-        <div>Total</div>
-        <div id="summaryTotal">$0.00</div>
-      </div>
+      <div class="total-row"><div>Total</div><div id="summaryTotal">$0.00</div></div>
       <p class="small-muted" style="margin-top:8px">Note: This demo stores bookings locally only. For real orders integrate a backend or payment gateway.</p>
     </aside>
-
   </main>
-
-  <!-- FOOTER -->
-  <footer class="footer">
-    <div>© <span id="year"></span> RAMEEL TANVEER. All Rights Reserved.</div>
-  </footer>
+<div class="footer-wrapper">
+        © 2025 <span class="brand-name">Rameel Tanveer</span>. All Rights Reserved.
+</div>
 
   <!-- JS -->
   <script>
